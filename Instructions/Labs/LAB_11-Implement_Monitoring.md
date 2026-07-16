@@ -154,7 +154,19 @@ In this task, you connect the VM to the workspace and install the Azure Monitor 
 
 1. Choose **Azure Monitor Agent** if the portal asks for an agent type.
 
-1. When asked for a Data Collection Rule, select **Create new**.
+1. On the **Capabilities** page, select **Customize infrastructure monitoring** if the monitoring options are not already visible.
+
+1. In **Enable detailed metrics**, configure the options exactly as follows.
+
+   | Setting | Value |
+   | --- | --- |
+   | OpenTelemetry metrics | Unchecked |
+   | `[Classic] Log-based metrics` | Checked |
+   | Log Analytics workspace | `az104-law11` |
+
+   > Important: Do not leave **OpenTelemetry metrics** selected for this lab. OpenTelemetry metrics are sent to an Azure Monitor workspace, such as `defaultazuremonitorworkspace-*`. The `Heartbeat` query in this lab uses Log Analytics tables, so the VM must send classic log-based data to `az104-law11`.
+
+1. When asked for a Data Collection Rule, select **Create new**. If the portal automatically proposes a new DCR, you can use it as long as the selected Log Analytics workspace is `az104-law11`.
 
 1. Use these values for the Data Collection Rule.
 
@@ -168,7 +180,7 @@ In this task, you connect the VM to the workspace and install the Azure Monitor 
    | Performance collection | Enabled |
    | Processes and dependencies / Map | Optional. Not required for this lab |
 
-1. If the portal shows **OpenTelemetry Metrics**, leave it unchecked unless instructed otherwise by your trainer.
+1. In **Alerts**, turn **Enable recommended alerts** off. You will create the delete alert manually later in this lab.
 
 1. Select **Review + enable**, **Configure**, or **Enable**.
 
