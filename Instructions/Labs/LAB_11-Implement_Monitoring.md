@@ -186,7 +186,36 @@ In this task, you connect the VM to the workspace and install the Azure Monitor 
 
 1. Wait until the configuration completes.
 
-1. Stay on the VM insights page and wait a few minutes. The portal may need 5 to 15 minutes before data appears.
+1. Verify that the Azure Monitor Agent extension was actually installed. The portal onboarding can create the Data Collection Rule and DCR association before the VM extension is visible or, in some tenants, without successfully installing the extension.
+
+   In Cloud Shell, run:
+
+   ```bash
+   az vm extension list \
+     --resource-group az104-rg11 \
+     --vm-name az104-vm0 \
+     --query "[].{name:name,publisher:publisher,state:provisioningState}" \
+     --output table
+   ```
+
+   Expected result: an extension named `AzureMonitorWindowsAgent` with publisher `Microsoft.Azure.Monitor`.
+
+   > Note: If you only see `MDE.Windows`, that is Microsoft Defender for Endpoint. It is a VM extension, but it is not the Azure Monitor Agent and it will not produce the `Heartbeat` data needed for this lab.
+
+1. If `AzureMonitorWindowsAgent` is missing, install it explicitly:
+
+   ```bash
+   az vm extension set \
+     --resource-group az104-rg11 \
+     --vm-name az104-vm0 \
+     --publisher Microsoft.Azure.Monitor \
+     --name AzureMonitorWindowsAgent \
+     --enable-auto-upgrade true
+   ```
+
+1. Run the extension check again and confirm that `AzureMonitorWindowsAgent` is listed as `Succeeded`.
+
+1. Stay on the VM insights page and wait a few minutes. The portal may need 5 to 15 minutes after the Azure Monitor Agent is installed before data appears.
 
 ## Alternative portal path
 
@@ -204,7 +233,7 @@ If you cannot find the VM insights onboarding page:
 
 1. Select **Extensions + applications**.
 
-1. Confirm that an Azure Monitor Agent extension is installed. For a Windows VM, it is commonly shown as `AzureMonitorWindowsAgent`.
+1. Confirm that an Azure Monitor Agent extension is installed. For a Windows VM, it is commonly shown as `AzureMonitorWindowsAgent`. Do not count `MDE.Windows` as the monitoring agent.
 
 1. In the Azure portal, search for and select **Data Collection Rules**.
 
