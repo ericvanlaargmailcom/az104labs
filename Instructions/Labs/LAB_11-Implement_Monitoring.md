@@ -31,6 +31,23 @@ Your organization has migrated infrastructure to Azure. Administrators must be a
 - Recommended region: `East US`. If quota fails, use another region consistently throughout the lab.
 - Use a password that meets Azure VM complexity requirements.
 
+## Before you start checklist
+
+Use this checklist before you run the lab, especially if you are using your own Azure tenant.
+
+1. Confirm the target region has VM quota for `Standard_D2s_v3`.
+1. Confirm your account has permissions for:
+   - Resource group creation
+   - VM deployment
+   - Log Analytics workspace creation
+   - Data Collection Rule creation
+   - Role assignments are not normally needed for this lab, but you must be able to enable monitoring on a VM
+   - Alert rule and action group creation
+1. Confirm the portal can enable VM insights with Azure Monitor Agent.
+1. Confirm your tenant does not block Azure Monitor Agent extension deployment by policy.
+1. Confirm outbound connectivity from the VM is not blocked. The template's NSG only controls inbound RDP; default outbound connectivity should remain available.
+1. Do not delete the VM until after the Heartbeat checkpoint in Task 4.
+
 ## Important design note
 
 Do not delete `az104-vm0` until after the Log Analytics verification task. `Heartbeat` is produced by the Azure Monitor Agent while the VM is running and associated with a Data Collection Rule. If the VM is deleted before monitoring is fully onboarded, you can end up with no visible heartbeat data.
@@ -532,27 +549,6 @@ Optional Azure CLI cleanup:
 ```bash
 az group delete --name az104-rg11 --yes --no-wait
 ```
-
----
-
-# Before you start checklist
-
-Use this checklist before you run the lab, especially if you are using your own Azure tenant.
-
-1. Confirm the target region has VM quota for `Standard_D2s_v3`.
-1. Confirm your account has permissions for:
-   - Resource group creation
-   - VM deployment
-   - Log Analytics workspace creation
-   - Data Collection Rule creation
-   - Role assignments are not normally needed for this lab, but you must be able to enable monitoring on a VM
-   - Alert rule and action group creation
-1. Confirm the portal can enable VM insights with Azure Monitor Agent.
-1. Confirm your tenant does not block Azure Monitor Agent extension deployment by policy.
-1. Confirm outbound connectivity from the VM is not blocked. The template's NSG only controls inbound RDP; default outbound connectivity should remain available.
-1. Do not delete the VM until after the Heartbeat checkpoint in Task 4.
-
----
 
 # Known-good validation commands
 
